@@ -16,3 +16,9 @@ $ ./gradlew npmClean clean build
 $ java -jar backend/app-admin/build/libs/gostop.admin.jar
 
 ```
+
+## 브라우저 확인
+### 로컬
+- localhost:8080
+- localhost:8080/login
+- localhost:8080/login/daily
