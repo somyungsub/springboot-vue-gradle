@@ -1,0 +1,47 @@
+spring:
+  thymeleaf:
+    prefix: classpath:/static/
+  profiles:
+    active: local
+
+---
+
+spring:
+  profiles: local
+
+server:
+  port: 80
+
+---
+
+spring:
+  profiles: dev
+
+server:
+  port: 80
+
+---
+
+spring:
+  profiles: alpha
+
+server:
+  port: 80
+
+---
+
+spring:
+  profiles: beta
+
+server:
+  port: 80
+
+---
+
+spring:
+  profiles: release
+
+server:
+  port: 80
+
+---

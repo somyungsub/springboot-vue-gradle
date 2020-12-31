@@ -2,7 +2,6 @@ package com.example.appadmin.web;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -11,16 +10,6 @@ import java.util.Map;
 
 @Controller
 public class TestController {
-
-//  @GetMapping(value = "/")
-//  public String test() {
-//    return "index";
-//  }
-//
-//  @GetMapping(value = "/login")
-//  public String login() {
-//    return "login/index";
-//  }
 
   @PostMapping(value = "/api/testPost")
   public ResponseEntity<Map<String, Object>> testPost(@RequestBody Map<String, Object> request) {

@@ -6,10 +6,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        // spring
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("com.github.node-gradle:gradle-node-plugin:2.2.4")
-        classpath('org.springframework:springloaded:1.2.6.RELEASE')
     }
 }
 
@@ -17,16 +15,20 @@ plugins {
     id "com.moowork.node" version "1.2.0"
 }
 
+subprojects {
+    group = 'com.hangame.admin'
+    version = '0.0.1-SNAPSHOT'
+}
+
 // configure gradle-node-plugin
 node {
     version = '9.11.2'
     npmVersion = '6.7.0'
     download = true
-//    workDir = file("${project.projectDir}/node")
     nodeModulesDir = file("${project.projectDir}/frontend")
 }
 
-// clean node/node_modules/dist
+// clean /node_modules, /dist
 // clean task for npm
 task npmClean(type: Delete) {
     final def webDir = "${rootDir}/frontend"
@@ -34,25 +36,20 @@ task npmClean(type: Delete) {
     delete "${webDir}/dist"
     delete "${webDir}/.nuxt"
     delete "${rootDir}/backend/app-admin/src/main/resources/static/"
-    mkdir "${rootDir}/backend/app-admin/src/main/resources/static"
 }
 
-
 // build task for npm
-task frontendBuild {}
-frontendBuild.dependsOn(npm_install)
-frontendBuild.dependsOn(npm_run_build)
-frontendBuild.dependsOn(npm_run_generate)
+task frontendBuild {
+    dependsOn(npm_install)
+    dependsOn(npm_run_build)
+    dependsOn(npm_run_generate)
+}
 
 npm_install {
     args = ['run', 'install']
 }
-
-npm_run_build {
-}
-
-npm_run_generate {
-}
+npm_run_build {}
+npm_run_generate {}
 
 task copyFiles {
     doLast {
@@ -63,59 +60,13 @@ task copyFiles {
     }
 }
 
-
-
 apply plugin: 'java'
 copyFiles.dependsOn(frontendBuild);
 compileJava.dependsOn(frontendBuild);
 
-task backendBuild {}
-backendBuild.dependsOn(compileJava)
-backendBuild.dependsOn(jar)
-jar.dependsOn(copyFiles)
-
-
-project(":backend:app-admin"){
-    apply plugin: 'java-library'
-    apply plugin: 'org.springframework.boot'
-
-    repositories {
-        mavenCentral()
-    }
-
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
-    dependencies {
-        // spring
-        compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
-        // testing
-        testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
-    }
-
+task backendBuild {
+    dependsOn(compileJava)
+    dependsOn(jar)
 }
 
-
-
-
-
-//eclipse {
-//    classpath {
-//        containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-//        containers('org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8')
-//    }
-//}
-
-//idea {
-//    module {
-//        inheritOutputDirs = false
-//        outputDir = file("${buildDir}/classes/main/")
-//    }
-//}
-
-
-
-//configurations {
-//    dev
-//}
-
+jar.dependsOn(copyFiles)
